@@ -1,0 +1,7 @@
+FROM python:3.11-alpine3.18
+
+# copy files
+COPY quest_server.py /quest_server.py
+
+# set command/entrypoint
+CMD ["python","/quest_server.py"]
