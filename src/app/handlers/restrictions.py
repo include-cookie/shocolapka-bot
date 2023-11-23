@@ -1,10 +1,12 @@
 from aiogram import Router, Bot, F
-from aiogram.types import Message, ChatPermissions
+from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Filter, Command, CommandObject
 from datetime import timedelta
 
-from app.services.restrictions import give_warn
+from app.services.restrictions import give_warn, give_mute
+from app.utils.timedelta import parse_delta
+
 
 from app.config import ADMINS
 
@@ -37,15 +39,16 @@ async def command_warn_handler(message: Message,state: FSMContext):
     F.reply_to_message.from_user,
     F.from_user.id.in_(ADMINS)
 )
-async def command_mute_handler(message: Message, bot: Bot):
+async def command_mute_handler(message: Message,command: CommandObject, bot: Bot):
     user = message.reply_to_message.from_user
 
-    await bot.restrict_chat_member(
-        message.chat.id,
-        user.id,
-        permissions=ChatPermissions(can_send_messages=False),
-        until_date=timedelta(minutes=5)
-    )
+    if command.args:
+        period = parse_delta(command.args)
+        period = period if period else timedelta(minutes=5)
+    else:
+        period = timedelta(minutes=5)
+
+    await give_mute(bot,message.chat.id,user.id,period)
 
     await message.answer(
         f'Замютчено, <a href="tg://user?id={user.id}">{user.full_name}</a>'
@@ -59,12 +62,7 @@ async def command_mute_handler(message: Message, bot: Bot):
 async def command_automute_handler(message: Message, bot: Bot):
     user = message.from_user
 
-    await bot.restrict_chat_member(
-        message.chat.id,
-        user.id,
-        permissions=ChatPermissions(can_send_messages=False),
-        until_date=timedelta(minutes=2)
-    )
+    await give_mute(bot,message.chat.id,user.id,timedelta(minutes=2))
 
     await message.answer(
         'Отакої!\n'

@@ -1,4 +1,5 @@
 from sqlalchemy import select,func
+from aiogram.types import ChatPermissions
 
 from app.db.models import Warn
 
@@ -33,3 +34,12 @@ async def get_all_warns(session,user_id,chat_id):
     warn_list = warn_list.scalars()
 
     return warn_list
+
+
+async def give_mute(bot,chat_id,user_id,period):
+    await bot.restrict_chat_member(
+        chat_id,
+        user_id,
+        permissions=ChatPermissions(can_send_messages=False),
+        until_date=period
+    )
