@@ -14,5 +14,5 @@ docker run --rm -d \
 -e BOT_ADMINS=60123432,605432142 \
 -e DB_URL=sqlite+aiosqlite:///db/sqlite.db \
 -v ./db:/project/db \
-ghcr.io/nitekot/neko_bot:latest
+ghcr.io/nitekot/neko_bot:main
 ```
