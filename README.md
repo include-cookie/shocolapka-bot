@@ -1,6 +1,6 @@
 # Neko Cookie bot
 
-Бот амдіністратор для телерам чату
+Бот адміністратор для телеграм чату
 
 ----
 
@@ -8,10 +8,11 @@
 
 ```sh
 docker run --rm -d \
--e BOT_TOKEN=ttt \
+-e DEBUG=False \
+-e BOT_TOKEN=tg_token \
 -e BOT_ADMIN_CHAT=60123432 \
--e export BOT_ADMINS=60123432,605432142 \
--e DB_URL=sqlite+aiosqlite:///sqlite.db \
---mount type=bind,source=./sqlite.db,target=/project/sqlite.db \
-neko_bot
+-e BOT_ADMINS=60123432,605432142 \
+-e DB_URL=sqlite+aiosqlite:///db/sqlite.db \
+-v ./db:/project/db \
+ghcr.io/nitekot/neko_bot:latest
 ```

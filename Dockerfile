@@ -6,7 +6,7 @@ RUN pip install pdm
 
 # copy files
 COPY pyproject.toml pdm.lock /project/
-COPY app/ /project/app
+COPY src/ /project/src
 
 # install dependencies and project into the local packages directory
 WORKDIR /project
