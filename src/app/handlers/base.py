@@ -3,7 +3,7 @@ from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 
-from app.config import ADMINS
+from app.config import ADMIN_CHAT
 
 
 router = Router(name=__name__)
@@ -15,11 +15,7 @@ async def command_start_handler(message: Message,state: FSMContext):
     await message.answer(f"Привіт, {message.from_user.full_name}!")
 
 
-@router.message(
-    Command('help'),
-    F.chat.type == 'private',
-    F.from_user.id.in_(ADMINS)
-)
+@router.message(Command('help'),F.chat.id==ADMIN_CHAT)
 async def command_admin_help_handler(message: Message):
     await message.answer(
         "Довідка:\n\n"
@@ -34,14 +30,5 @@ async def command_admin_help_handler(message: Message):
 async def command_help_handler(message: Message):
     await message.answer(
         "Чим я можу допомогти ?\n\n"
-        "/request_admin - почати діалог з адміністрацією"
-    )
-
-
-@router.message(F.chat.type == 'private')
-async def comman_msg_handler(message: Message):
-    await message.answer(
-        "Вибачте не зрозуміла вашої команди ((\n\n"+
-        ("/request_admin - почати діалог з адміністрацією"
-        if message.from_user.id not in ADMINS else '')
+        "Напишіть в чат щоб почати діалог з адміністрацією"
     )
