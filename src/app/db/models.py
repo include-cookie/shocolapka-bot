@@ -29,3 +29,9 @@ class Warn(Base):
     __mapper_args__ = {
         "primary_key": 'warned_at'
     }
+
+class Dialog(Base):
+    __tablename__ = "dialogs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    peer_id: Mapped[int] = mapped_column(index=True)
