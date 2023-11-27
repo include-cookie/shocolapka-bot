@@ -68,3 +68,12 @@ class SQLStorage(BaseStorage):
                 )
             )
         )
+
+def fix_storage_key(key: StorageKey) -> StorageKey:
+    return StorageKey(
+        user_id=key.user_id,
+        chat_id=key.user_id,
+        bot_id=key.bot_id,
+        thread_id=key.thread_id,
+        destiny=key.destiny,
+    )
