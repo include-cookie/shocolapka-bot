@@ -7,8 +7,6 @@ from datetime import timedelta
 from app.services.restrictions import give_warn, give_mute
 from app.utils.timedelta import parse_delta
 
-
-from app.config import ADMINS
 from app.utils.filters import IsAdmin
 
 
