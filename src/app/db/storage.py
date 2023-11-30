@@ -6,7 +6,7 @@ from aiogram.fsm.storage.base import (
 )
 
 from sqlalchemy import select
-from sqlalchemy.dialects.sqlite import insert
+from sqlalchemy.dialects.postgresql import insert
 
 from app.db import Session
 from app.db.models import SQLStorageRecord
