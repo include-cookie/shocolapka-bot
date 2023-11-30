@@ -9,6 +9,7 @@ from app.utils.timedelta import parse_delta
 
 
 from app.config import ADMINS
+from app.utils.filters import IsAdmin
 
 
 router = Router(name=__name__)
@@ -17,7 +18,7 @@ router = Router(name=__name__)
 @router.message(
     Command("warn"),
     F.reply_to_message.from_user,
-    F.from_user.id.in_(ADMINS)
+    IsAdmin()
 )
 async def command_warn_handler(message: Message,state: FSMContext):
     user = message.reply_to_message.from_user
@@ -37,7 +38,7 @@ async def command_warn_handler(message: Message,state: FSMContext):
 @router.message(
     Command("mute"),
     F.reply_to_message.from_user,
-    F.from_user.id.in_(ADMINS)
+    IsAdmin()
 )
 async def command_mute_handler(message: Message,command: CommandObject, bot: Bot):
     user = message.reply_to_message.from_user
@@ -57,7 +58,7 @@ async def command_mute_handler(message: Message,command: CommandObject, bot: Bot
 
 @router.message(
     Command("mute"),
-    ~F.from_user.id.in_(ADMINS)
+    ~IsAdmin()
 )
 async def command_automute_handler(message: Message, bot: Bot):
     user = message.from_user
