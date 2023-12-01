@@ -13,7 +13,12 @@ WORKDIR /project
 RUN mkdir __pypackages__ && pdm sync --prod --no-editable
 
 
-FROM python:3.11-alpine3.18
+FROM builder AS dev
+RUN pdm sync --no-editable
+COPY alembic.ini /project/
+
+
+FROM python:3.11-alpine3.18 AS prod
 
 # retrieve packages from build stage
 ENV PYTHONPATH=/project/pkgs
