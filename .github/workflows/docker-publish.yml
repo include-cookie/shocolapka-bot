@@ -100,23 +100,38 @@ jobs:
       contents: read
       packages: read
 
+    env:
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      BOT_ADMIN_CHAT: ${{ secrets.BOT_ADMIN_CHAT }}
+      PG_USER_PASSWORD: ${{ secrets.PG_USER_PASSWORD }}
+      PG_LOCAL_PORT: ${{ vars.PG_LOCAL_PORT }}
+      DB_URL: postgresql+asyncpg://postgres:${{ PG_USER_PASSWORD }}@127.0.0.1:5432/cookie_db
+
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Install alembic
         run: sudo apt-get install -y alembic
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Make migration
+        run: |
+          mkdir ~/.ssh
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          eval `ssh-agent -s`
+          ssh-add - <<< "${{ secrets.SSH_KEY }}"
+          ssh -fnNT -L 5432:127.0.0.1:${{ vars.PG_LOCAL_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
+          alembic upgrade head
 
-      - name: Pull new image on host
+      - name: Pull new image on host and restart bot container
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
+          envs: BOT_TOKEN,BOT_ADMIN_CHAT,PG_USER_PASSWORD,PG_LOCAL_PORT
           script: |
-            echo ${{ github.token }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-            docker pull ${{ steps.meta.outputs.tags }}
+            docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ github.token }}
+            docker compose pull
+            docker compose up -d --no-deps neko_bot
             docker logout ${{ env.REGISTRY }}
