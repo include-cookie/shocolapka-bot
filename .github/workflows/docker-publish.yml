@@ -111,17 +111,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install alembic
-        run: sudo apt-get install -y alembic
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: 3.11.5
+          cache: true
 
-      - name: Make migration
+      - name: Install dependencies
+        run: pdm sync -d
+
+      - name: Setup SSH tunel to host db
         run: |
           mkdir ~/.ssh
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
           eval `ssh-agent -s`
           ssh-add - <<< "${{ secrets.SSH_KEY }}"
           ssh -fnNT -L 5432:127.0.0.1:${{ vars.PG_LOCAL_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
-          PYTHONPATH=src alembic upgrade head
+
+      - name: Make migration
+        run: pdm migrate
 
       - name: Pull new image on host and restart bot container
         uses: appleboy/ssh-action@v1.0.0
