@@ -105,7 +105,7 @@ jobs:
       BOT_ADMIN_CHAT: ${{ secrets.BOT_ADMIN_CHAT }}
       PG_USER_PASSWORD: ${{ secrets.PG_USER_PASSWORD }}
       PG_LOCAL_PORT: ${{ vars.PG_LOCAL_PORT }}
-      DB_URL: postgresql+asyncpg://postgres:${{ PG_USER_PASSWORD }}@127.0.0.1:5432/cookie_db
+      DB_URL: postgresql+asyncpg://postgres:${{ secrets.PG_USER_PASSWORD }}@127.0.0.1:5432/cookie_db
 
     steps:
       - name: Checkout repository
