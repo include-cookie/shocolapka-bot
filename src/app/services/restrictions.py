@@ -4,10 +4,10 @@ from aiogram.types import ChatPermissions
 from app.db.models import Warn
 
 
-async def give_warn(session,user_id,chat_id,reason=None):
+async def give_warn(session,chat_id,user_id,reason=None):
     warn = Warn(
-        user_id=user_id,
         chat_id=chat_id,
+        user_id=user_id,
         reason=reason
     )
 
@@ -24,7 +24,7 @@ async def give_warn(session,user_id,chat_id,reason=None):
     return cnt
 
 
-async def get_all_warns(session,user_id,chat_id):
+async def get_all_warns(session,chat_id,user_id):
     stmt = select(Warn).where(
         Warn.chat_id == chat_id,
         Warn.user_id == user_id,

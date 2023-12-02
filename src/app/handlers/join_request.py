@@ -34,7 +34,7 @@ async def cjr_handler(request: ChatJoinRequest, state: FSMContext):
     lst = [
         [KeyboardButton(text="Я Бот")],
         [KeyboardButton(text="Я Людина")],
-        [KeyboardButton(text="0100101")],
+        #[KeyboardButton(text="0100101")],
     ]
 
     random.shuffle(lst)

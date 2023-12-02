@@ -33,7 +33,7 @@ class Dialog:
                     self.name = f"{chat.first_name} {chat.last_name or ''}"
                 else:
                     self.name = chat.title
-                self.id = await self.__get_dialog_id(peer)
+                self.id = await self.__get_dialog_id(chat.id)
                 self.peer = chat.id
 
             case _:
