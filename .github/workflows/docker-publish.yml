@@ -121,7 +121,7 @@ jobs:
           eval `ssh-agent -s`
           ssh-add - <<< "${{ secrets.SSH_KEY }}"
           ssh -fnNT -L 5432:127.0.0.1:${{ vars.PG_LOCAL_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
-          alembic upgrade head
+          PYTHONPATH=src alembic upgrade head
 
       - name: Pull new image on host and restart bot container
         uses: appleboy/ssh-action@v1.0.0
