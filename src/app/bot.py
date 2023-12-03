@@ -6,7 +6,6 @@ from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from app import handlers 
-from app.db import init_models 
 from app.db.storage import SQLStorage
 
 from app.config import TOKEN
