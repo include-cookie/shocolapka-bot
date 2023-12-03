@@ -18,7 +18,8 @@ class SQLStorage(BaseStorage):
         self.session = AsyncScopedSession()
 
     async def close(self):
-        await self.session.remove()
+        await self.session.close()
+        await AsyncScopedSession.remove()
 
 
     async def set_state(self, key: StorageKey, state: StateType = None) -> None:
