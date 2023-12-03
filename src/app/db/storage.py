@@ -8,17 +8,17 @@ from aiogram.fsm.storage.base import (
 from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 
-from app.db import Session
+from app.db import AsyncScopedSession
 from app.db.models import SQLStorageRecord
 
 
 class SQLStorage(BaseStorage):
 
     def __init__(self):
-        self.session = Session()
+        self.session = AsyncScopedSession()
 
     async def close(self):
-        await self.session.close()
+        await self.session.remove()
 
 
     async def set_state(self, key: StorageKey, state: StateType = None) -> None:
