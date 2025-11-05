@@ -163,3 +163,5 @@ cython_debug/
 .tool-versions
 sqlite.db
 pg_data
+
+.env.*

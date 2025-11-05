@@ -5,9 +5,19 @@ services:
   neko_bot:
     image: ghcr.io/nitekot/neko_bot:main
     environment:
+      - DEBUG=false
       - BOT_TOKEN=${BOT_TOKEN}
       - BOT_ADMIN_CHAT=${BOT_ADMIN_CHAT}
+      - PANDC_CHAT_ID=${PANDC_CHAT_ID}
+      - RULE_URL=${RULE_URL}
+      - TOKEN_KEY=${TOKEN_KEY}
+      - TOKEN_AUD=${TOKEN_AUD}
+      - TOKEN_ISS=${TOKEN_ISS}
+      - MAIN_SITE_URL=${MAIN_SITE_URL}
       - DB_URL=postgresql+asyncpg://postgres:${PG_USER_PASSWORD}@db:5432/cookie_db
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:16-alpine3.18
@@ -19,3 +29,8 @@ services:
       - 127.0.0.1:${PG_LOCAL_PORT}:5432
     volumes:
       - ./pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U postgres -d cookie_db -c 'SELECT 1' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5

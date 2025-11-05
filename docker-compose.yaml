@@ -1,6 +1,5 @@
 version: '3.9'
 
-
 services:
   neko_bot:
     build:
@@ -12,13 +11,18 @@ services:
       - DEBUG=true
       - BOT_TOKEN=${BOT_TOKEN}
       - BOT_ADMIN_CHAT=${BOT_ADMIN_CHAT}
+      - PANDC_CHAT_ID=${PANDC_CHAT_ID}
+      - RULE_URL=${RULE_URL}
+      - TOKEN_KEY=${TOKEN_KEY}
+      - TOKEN_AUD=${TOKEN_AUD}
+      - TOKEN_ISS=${TOKEN_ISS}
+      - MAIN_SITE_URL=${MAIN_SITE_URL}
       - DB_URL=postgresql+asyncpg://postgres:postgres@db:5432/cookie_db
     volumes:
       - ./migrations:/project/migrations
-
     depends_on:
-      - db
-
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:16-alpine3.18
@@ -30,3 +34,12 @@ services:
       - 5432:5432
     volumes:
       - ./pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U postgres -d cookie_db -c 'SELECT 1' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+networks:
+  default:
+      driver: bridge
