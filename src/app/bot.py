@@ -4,6 +4,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.client.default import DefaultBotProperties
 
 from app import handlers 
 from app.db.storage import SQLStorage
@@ -12,7 +13,12 @@ from app.config import TOKEN
 
 
 async def main() -> None:
-    bot = Bot(TOKEN,parse_mode=ParseMode.HTML)
+    bot = Bot(
+        token=TOKEN,
+        default=DefaultBotProperties(
+            parse_mode=ParseMode.HTML,
+        )
+    )
 
     dp = Dispatcher(storage=SQLStorage())
     handlers.register(dp)
