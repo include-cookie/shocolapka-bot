@@ -6,8 +6,8 @@ from aiogram.filters import Command, CommandStart, CommandObject
 from aiogram.fsm.context import FSMContext
 
 from app.config import ADMIN_CHAT, MAIN_SITE_URL, PANDC_CHAT_ID, DEBUG
-from src.app.services.token_gen import gen_token
-from src.app.utils.helpers import IsAdmin
+from app.services.token_gen import gen_token
+# from app.utils.helpers import IsAdmin
 
 from aiogram.utils.deep_linking import decode_payload
 from aiogram.types import Message, ChatMemberAdministrator, ChatMemberRestricted, ChatMemberOwner, ChatMemberMember
