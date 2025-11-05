@@ -2,8 +2,10 @@ from aiogram import Router, Bot, F
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Filter, Command, CommandObject
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import timedelta
 
+from app.config import RULE_URL
 from app.services.restrictions import give_warn, give_mute
 from app.utils.timedelta import parse_delta
 
@@ -66,4 +68,17 @@ async def command_automute_handler(message: Message, bot: Bot):
     await message.answer(
         'Отакої!\n'
         f'<a href="tg://user?id={user.id}">{user.full_name}</a> вирішив самозамютитись ...'
+    )
+
+@router.message(
+    Command("rule")
+)
+async def command_rule_handler(message: Message):
+    main_kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text = "Правила 🐾", url=RULE_URL), ]
+    ],)
+
+    await message.answer(
+        "Тицни кнопочку нижче, щоб побачити правила\n\n",
+        reply_markup=main_kb
     )
