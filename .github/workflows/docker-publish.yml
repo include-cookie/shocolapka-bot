@@ -107,6 +107,12 @@ jobs:
       BOT_ADMIN_CHAT: ${{ secrets.BOT_ADMIN_CHAT }}
       PG_USER_PASSWORD: ${{ secrets.PG_USER_PASSWORD }}
       PG_LOCAL_PORT: ${{ vars.PG_LOCAL_PORT }}
+      PANDC_CHAT_ID: ${{ vars.PANDC_CHAT_ID }}
+      RULE_URL: ${{ vars.RULE_URL }}
+      TOKEN_KEY: ${{ vars.TOKEN_KEY }}
+      TOKEN_AUD: ${{ vars.TOKEN_AUD }}
+      TOKEN_ISS: ${{ vars.TOKEN_ISS }}
+      MAIN_SITE_URL: ${{ vars.MAIN_SITE_URL }}
       DB_URL: postgresql+asyncpg://postgres:${{ secrets.PG_USER_PASSWORD }}@127.0.0.1:5432/cookie_db
 
     steps:
@@ -139,7 +145,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: BOT_TOKEN,BOT_ADMIN_CHAT,PG_USER_PASSWORD,PG_LOCAL_PORT
+          envs: BOT_TOKEN,BOT_ADMIN_CHAT,PG_USER_PASSWORD,PG_LOCAL_PORT,PANDC_CHAT_ID,RULE_URL,TOKEN_KEY,TOKEN_AUD,TOKEN_ISS,MAIN_SITE_URL
           script: |
             docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ github.token }}
             docker compose pull
