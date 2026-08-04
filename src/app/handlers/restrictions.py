@@ -5,6 +5,8 @@ from aiogram.filters import Filter, Command, CommandObject
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import timedelta
 
+from aiogram.utils.text_decorations import html_decoration
+
 from app.config import RULE_URL
 from app.services.restrictions import give_warn, give_mute
 from app.utils.timedelta import parse_delta
@@ -30,7 +32,7 @@ async def command_warn_handler(message: Message,state: FSMContext):
     )
 
     await message.answer(
-        f'Попередження для <a href="tg://user?id={user.id}">{user.full_name}</a>'
+        f'Попередження для <a href="tg://user?id={user.id}">{html_decoration.quote(user.full_name)}</a>'
         + (f'\nЦе уже {cnt} попередження!' if cnt > 2 else '')
     )
 
@@ -52,7 +54,7 @@ async def command_mute_handler(message: Message,command: CommandObject, bot: Bot
     await give_mute(bot,message.chat.id,user.id,period)
 
     await message.answer(
-        f'Замютчено, <a href="tg://user?id={user.id}">{user.full_name}</a>'
+        f'Замютчено, <a href="tg://user?id={user.id}">{html_decoration.quote(user.full_name)}</a>'
     )
 
 
@@ -67,7 +69,7 @@ async def command_automute_handler(message: Message, bot: Bot):
 
     await message.answer(
         'Отакої!\n'
-        f'<a href="tg://user?id={user.id}">{user.full_name}</a> вирішив самозамютитись ...'
+        f'<a href="tg://user?id={user.id}">{html_decoration.quote(user.full_name)}</a> вирішив самозамютитись ...'
     )
 
 @router.message(

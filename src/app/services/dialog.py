@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from aiogram.utils.text_decorations import html_decoration
 
 from app.db.models import Dialog as DialogModel
 
@@ -63,12 +64,13 @@ class Dialog:
         self.session.add(dialog)
         await self.session.commit()
 
-        link = f'<a href="tg://user?id={self.peer}">{self.name}</a>' if self.peer > 0 else None
+        safe_name = html_decoration.quote(self.name)
+        link = f'<a href="tg://user?id={self.peer}">{safe_name}</a>' if self.peer > 0 else None
 
         await self.bot.send_message(
             self.admin_chat,
             f"id: {self.peer}\n"
-            f"name: {link or self.name}\n\n"
+            f"name: {link or safe_name}\n\n"
             "Діалог розпочато!",
             message_thread_id=dialog.id,
         )
