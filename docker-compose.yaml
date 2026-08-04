@@ -11,12 +11,7 @@ services:
       - DEBUG=true
       - BOT_TOKEN=${BOT_TOKEN}
       - BOT_ADMIN_CHAT=${BOT_ADMIN_CHAT}
-      - PANDC_CHAT_ID=${PANDC_CHAT_ID}
       - RULE_URL=${RULE_URL}
-      - TOKEN_KEY=${TOKEN_KEY}
-      - TOKEN_AUD=${TOKEN_AUD}
-      - TOKEN_ISS=${TOKEN_ISS}
-      - MAIN_SITE_URL=${MAIN_SITE_URL}
       - DB_URL=postgresql+asyncpg://postgres:postgres@db:5432/cookie_db
     volumes:
       - ./migrations:/project/migrations
