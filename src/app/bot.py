@@ -3,13 +3,20 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.enums.parse_mode import ParseMode
-from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.client.default import DefaultBotProperties
 
-from app import handlers 
+from app import handlers
+from app.db import AsyncScopedSession
 from app.db.storage import SQLStorage
 
 from app.config import TOKEN
+
+
+async def release_db_session_middleware(handler, event, data):
+    try:
+        return await handler(event, data)
+    finally:
+        await AsyncScopedSession.remove()
 
 
 async def main() -> None:
@@ -21,6 +28,7 @@ async def main() -> None:
     )
 
     dp = Dispatcher(storage=SQLStorage())
+    dp.update.outer_middleware(release_db_session_middleware)
     handlers.register(dp)
 
     await dp.start_polling(bot)

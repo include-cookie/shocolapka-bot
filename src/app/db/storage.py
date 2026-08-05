@@ -14,8 +14,9 @@ from app.db.models import SQLStorageRecord
 
 class SQLStorage(BaseStorage):
 
-    def __init__(self):
-        self.session = AsyncScopedSession()
+    @property
+    def session(self):
+        return AsyncScopedSession()
 
     async def close(self):
         await self.session.close()
